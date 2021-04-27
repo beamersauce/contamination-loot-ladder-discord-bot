@@ -13,4 +13,5 @@ bot.load_extension("cogs.auction")
 bot.load_extension("cogs.error")
 
 #run the client
-bot.run('', bot=True, reconnect=True)
+discord_key = open('discord.key', 'r').read()
+bot.run(discord_key, bot=True, reconnect=True)
