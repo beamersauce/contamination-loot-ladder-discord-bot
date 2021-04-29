@@ -1,7 +1,6 @@
 # import discord
 from discord.ext import commands
-import ladder
-
+import error_types
 
 class ErrorCog(commands.Cog):
     def __init__(self, bot):
@@ -28,6 +27,12 @@ class ErrorCog(commands.Cog):
         if isinstance(error, commands.DisabledCommand):
             await ctx.send(f'{ctx.command} has been disabled.')
 
+        elif isinstance(error, error_types.DMOnlyFailure):
+            await ctx.send(f'{ctx.command} can only be used in Private Messages.')
+
+        elif isinstance(error, error_types.OfficerOnlyFailure):
+            await ctx.send(f'{ctx.command} can only be used by officers.')
+
         elif isinstance(error, commands.NoPrivateMessage):
             try:
                 await ctx.author.send(f'{ctx.command} can not be used in Private Messages.')
@@ -42,8 +47,10 @@ class ErrorCog(commands.Cog):
         else:
             # All other Errors not returned come here. And we can just print the default TraceBack.
             await ctx.send("Error: {}".format(error))
-            print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
-            traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
+            print('Ignoring exception in command: {}'.format(ctx.command))
+            
+            # print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
+            # traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
             
 
 

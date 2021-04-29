@@ -21,8 +21,7 @@ sheet = service.spreadsheets()
 
 def get():
     ladder = []
-    result = sheet.values().get(spreadsheetId=SHEET_ID,
-                            range='Loot Ladder!A:E').execute()
+    result = sheet.values().get(spreadsheetId=SHEET_ID, range='Loot Ladder!A:E').execute()
     values = result.get('values', [])
     if not values:
         print('No data found.')
@@ -44,6 +43,7 @@ def get():
 #             ladder.append(createPerson(row))
 
 #     return ladder
+
 
 #TODO i should use a class for this
 #utility function to turn sheet row into person object
