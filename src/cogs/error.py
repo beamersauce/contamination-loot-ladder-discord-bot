@@ -1,6 +1,8 @@
 # import discord
 from discord.ext import commands
 import error_types
+import sys
+import traceback
 
 class ErrorCog(commands.Cog):
     def __init__(self, bot):
@@ -47,10 +49,10 @@ class ErrorCog(commands.Cog):
         else:
             # All other Errors not returned come here. And we can just print the default TraceBack.
             await ctx.send("Error: {}".format(error))
-            print('Ignoring exception in command: {}'.format(ctx.command))
+            # print('Ignoring exception in command: {}'.format(ctx.command))
             
-            # print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
-            # traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
+            print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
+            traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
             
 
 

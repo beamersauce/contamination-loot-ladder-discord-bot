@@ -1,5 +1,6 @@
 class Metadata:
-    def __init__(self, serverName, textChannel, attendanceChannel, adminRole):
+    def __init__(self, spreadsheetmetadata, serverName, textChannel, attendanceChannel, adminRole):
+        self.spreadsheetmetadata = spreadsheetmetadata
         self.serverName = serverName
         self.textChannel = textChannel
         self.attendanceChannel = attendanceChannel

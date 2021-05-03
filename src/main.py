@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import utils
 import metadata
+import ladder_svc
 
 intents = discord.Intents.default()
 intents.members = True
@@ -16,7 +17,8 @@ bot.load_extension("cogs.error")
 @bot.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(bot))
-    metadata = utils.getMetadata()
+    ladder_service = ladder_svc.LadderService()
+    metadata = ladder_service.getMetadata()
     print(metadata)
 
 #run the client
