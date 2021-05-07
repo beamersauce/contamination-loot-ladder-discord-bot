@@ -5,13 +5,14 @@ import random
 import utils
 import error_types
 import ladder_svc
+import typing
 
 class AuctionCog(commands.Cog, name='Auction'):
-    def __init__(self, bot):
+    def __init__(self, bot, ladder_service: ladder_svc.LadderService):
         self.bot = bot
         self.auctions = {}
         self.auctionCheck.start()
-        self.ladder_service = ladder_svc.LadderService()
+        self.ladder_service = ladder_service
 
     def cog_unload(self):
         self.auctionCheck.cancel()
@@ -30,21 +31,32 @@ class AuctionCog(commands.Cog, name='Auction'):
     @commands.check(isOfficer)
     async def auction(self, ctx, item_name: str, seconds: int):
         auc = self.ladder_service.createAuction(item_name, seconds)
-        await utils.sendToChannel(self.bot, self.ladder_service.getMetadata(), 'Starting auction for "{}" lasting {} seconds\nTo bid, send a direct message to me of the following command (with quotes and all):\n`!bid "{}"`'.format(auc.itemName, auc.seconds, auc.itemName))        
+        await utils.sendToChannel(self.bot, 'Starting auction for "{}" lasting {} seconds\nTo bid, send a direct message to me of the following command (with quotes and all):\n`!bid "{}"`'.format(auc.itemName, auc.seconds, auc.itemName))        
         await ctx.message.add_reaction('\N{THUMBS UP SIGN}')        
     
     @commands.command(name='bid', pass_context=True, brief='bid on an auction', description='bids your position on an active auction')
     @commands.check(isDM)
     async def bid(self, ctx, item_name: str):
         name = ctx.author.display_name
-        self.ladder_service.bidOnAuction(item_name, name)
+        self.ladder_service.bidOnAuction(self.bot, item_name, name)
+        await ctx.message.add_reaction('\N{THUMBS UP SIGN}')
+
+    @commands.command(name='abid', pass_context=True, brief='bid on an auction for someone', description='bids a players position on an active auction, this is useful when a player cant bid for themself')
+    @commands.check(isOfficer)
+    async def adminBid(self, ctx, item_name: str, name: str):
+        self.ladder_service.bidOnAuction(self.bot, item_name, name)
         await ctx.message.add_reaction('\N{THUMBS UP SIGN}')
 
     @commands.command(name='print', pass_context=True, brief='show auctions', description='shows all current auctions')
     @commands.check(isDM)
     async def print(self, ctx):
-        auctions = self.ladder_service.getAuctions()       
-        await ctx.send(auctions)
+        auctions = self.ladder_service.getAuctions()   
+        print(auctions)   
+        msg = 'Auctions:'
+        for key in auctions:
+            auc = auctions[key]
+            msg += '\n{}'.format(auc)
+        await ctx.send(msg)
 
     @tasks.loop(seconds=10.0)
     async def auctionCheck(self):
@@ -56,5 +68,5 @@ class AuctionCog(commands.Cog, name='Auction'):
 
 
 
-def setup(bot):
-    bot.add_cog(AuctionCog(bot))
+def setup(bot, ladder_service: ladder_svc.LadderService):
+    bot.add_cog(AuctionCog(bot, ladder_service))

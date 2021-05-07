@@ -1,3 +1,14 @@
+How to connect bot to discord server:
+1. nav to https://discord.com/developers/applications > go to LootLadder app
+2. go to OAuth2 tab > 
+    Scopes: [bot]
+    Bot Permissions: [View Channels, Send Messages, Mention Everyone, Add Reactions, Connect]
+3. Copy url in scopes box, give to server admin
+4. click link > add to server > authorize
+
+How to connect bot to google sheet:
+    TODO (service.json crap)
+
 commands:
 # NORMAL
 * help - show all commands
