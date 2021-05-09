@@ -22,8 +22,9 @@ class LadderInfoCog(commands.Cog, name='Ladder Info'):
             return True
         raise error_types.OfficerOnlyFailure(ctx.author.name)
 
+
     @commands.command(name='list', pass_context=True, brief='display loot ladder', description='displays the current loot ladder')
-    @commands.check(isDM)
+    # @commands.check(isDM)
     async def list(self, ctx):
         players = self.ladder_service.list()
         await ctx.send(self.prettyPrint(players))

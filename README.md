@@ -24,12 +24,13 @@ commands:
 * bid "<item name>" ?<name> - bid on <item name> with ladder position with option <name> or person bidding
 
 TODO:
-admins - allow some commands to be admin only 
 logging
 error handling/messaging
-record - if people aren't found put them on an 'upcoming list'
-list rules
-    drop users to 'upcoming' if they haven't raided in X days
-    move users to ladder if they have 3 raids
-set_channel <channel> - set channel for raid attendance and ladder/auction messages
-handle nickname "* playername"
+allow changing metadata
+allow using playername or @discord_nickname_
+customize bidding to potentially not autodrop winner? let ladder admin verify
+allow bidding by adding reaction to auction?
+should we show who has bid in live updates?
+is there a way to map from input -> playername without me maintaining the list in excel
+    input can be: playername, @discord_nickname, or @discord_name (dm's)
+upgrade to slash commands instead of !

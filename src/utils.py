@@ -1,6 +1,5 @@
 import discord
 import metadata
-# import ladder_data
 import datetime
 import player
 import ladder_svc
