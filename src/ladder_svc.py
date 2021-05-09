@@ -5,6 +5,7 @@ import discord
 import auction
 import datetime
 import utils
+import playername_lookup
 
 class LadderService:
     def __init__(self, activeLadder, inactiveLadder, metadata):
@@ -12,6 +13,7 @@ class LadderService:
         self.inactiveLadder = inactiveLadder
         self.metadata = metadata
         self.auctions = {}
+        self.playerNameLookup = playername_lookup.PlayerNameLookup()
 
     def list(self):
         return self.activeLadder.get()

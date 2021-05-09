@@ -10,28 +10,28 @@ import utils
 import spreadsheetmetadata
 
 # METADATA - burch server
-# google_spreadsheet_id = '1bw7PFkwSm4b9T57217PtKqk34zC43ZXKlZQrfDEYRvE'
-# google_ladder_sheet_id = '0'
-# google_upcoming_sheet_id = '1957720808'
-# google_metadata_sheet_id = '2023502702'
-# discord_server_name = "burch's server"
-# discord_text_channel = 'ladder'
-# discord_voice_channel = 'raid'
-# discord_role_name = 'ladder admin'
-# raids_per_period = 3
-# period_in_days = 14
-# END METADATA
-# METADATA - contam
 google_spreadsheet_id = '1bw7PFkwSm4b9T57217PtKqk34zC43ZXKlZQrfDEYRvE'
 google_ladder_sheet_id = '0'
 google_upcoming_sheet_id = '1957720808'
 google_metadata_sheet_id = '2023502702'
-discord_server_name = "FrozenGaming"
-discord_text_channel = 'lootladdertest'
-discord_voice_channel = 'RAID'
-discord_role_name = 'LootLadder'
+discord_server_name = "burch's server"
+discord_text_channel = 'ladder'
+discord_voice_channel = 'raid'
+discord_role_name = 'ladder admin'
 raids_per_period = 3
 period_in_days = 14
+# END METADATA
+# METADATA - contam
+# google_spreadsheet_id = '1bw7PFkwSm4b9T57217PtKqk34zC43ZXKlZQrfDEYRvE'
+# google_ladder_sheet_id = '0'
+# google_upcoming_sheet_id = '1957720808'
+# google_metadata_sheet_id = '2023502702'
+# discord_server_name = "FrozenGaming"
+# discord_text_channel = 'lootladdertest'
+# discord_voice_channel = 'RAID'
+# discord_role_name = 'LootLadder'
+# raids_per_period = 3
+# period_in_days = 14
 # END METADATA
 
 intents = discord.Intents.default()
