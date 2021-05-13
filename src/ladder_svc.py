@@ -5,34 +5,47 @@ import discord
 import auction
 import datetime
 import utils
-import playername_lookup
+# import playername_lookup
 
 class LadderService:
-    def __init__(self, activeLadder, inactiveLadder, metadata):
+    def __init__(self, activeLadder, inactiveLadder, metadata, bot):
         self.activeLadder = activeLadder
         self.inactiveLadder = inactiveLadder
         self.metadata = metadata
         self.auctions = {}
-        self.playerNameLookup = playername_lookup.PlayerNameLookup()
+        self.bot = bot
+        # self.playerlookup = playername_lookup.PlayerNameLookup(self.activeLadder, self.inactiveLadder, self.bot)
 
-    def list(self):
-        return self.activeLadder.get()
+    def list(self, active:bool=True):
+        if active:
+            return self.activeLadder.get()
+        else:
+            return self.inactiveLadder.get()
 
-    def getPlayer(self, bot: discord.client, name: str, activeOnly:bool=True):
-        #try to find server nickname from name first if one exists
-        name = utils.getDiscordNicknameFromDiscordName(bot, name)
-        player = self.activeLadder.getByName(name)
+    def getPlayerByName(self, playername: str, activeOnly:bool=True):
+        player = self.activeLadder.getByName(playername)
         if not activeOnly and None == player:
-            player = self.inactiveLadder.getByName(name)
+            player = self.inactiveLadder.getByName(playername)
         if None == player:
-            raise Exception("No user found on ladder with name or discordName: {}".format(name))
+            raise Exception("No user found on ladder with player name: {}".format(playername))
         return player
+
+    #OLD WAY - DEPRECATE THIS ONCE getPlayerByName works
+    # def getPlayer(self, bot: discord.client, name: str, activeOnly:bool=True):        
+    #     # name = self.playerlookup.findPlayerName(name)
+    #     name = utils.getDiscordNicknameFromDiscordName(bot, name)
+    #     player = self.activeLadder.getByName(playername)
+    #     if not activeOnly and None == player:
+    #         player = self.inactiveLadder.getByName(playername)
+    #     if None == player:
+    #         raise Exception("No user found on ladder with player name: {}".format(playername))
+    #     return player
 
     def getMetadata(self):
         return self.metadata
 
-    def move(self, name: str, newPosition: int):
-        player = self.activeLadder.getByName(name)
+    def move(self, playername: str, newPosition: int):
+        player = self.getPlayerByName(playername, True)
         self.activeLadder.move(player.position, newPosition)
         player.position = newPosition
         return player
@@ -94,8 +107,8 @@ class LadderService:
         self.auctions[item_name] = auc
         return auc
 
-    def bidOnAuction(self, bot: discord.client, item_name: str, name: str):
-        player = self.getPlayer(bot, name)
+    def bidOnAuction(self, item_name: str, playerName: str):
+        player = self.getPlayerByName(playerName, True)
         print('received bid for "{}" from {}'.format(item_name, player.name))
         if item_name in self.auctions:
             self.auctions[item_name].bids.append(player.name)
@@ -147,8 +160,8 @@ class LadderService:
         return self.auctions
 
     #move name from active to inactive
-    async def demote(self, bot: discord.client, name: str, ranByName: str):
-        player = self.getPlayer(bot, name)
+    async def demote(self, bot: discord.client, playername: str, ranByName: str):
+        player = self.getPlayerByName(playerName, True)
         if None == player:
             raise Exception('No player on active ladder named {}'.format(name))
         self.activeLadder.remove(player.position)
@@ -157,7 +170,7 @@ class LadderService:
 
     #move name from inactive to active
     async def promote(self, bot, name: str, ranByName: str):
-        player = self.inactiveLadder.getByName(name)
+        player = self.getPlayerByName(playerName, False)
         if None == player:
             raise Exception('No player on inactive ladder named {}'.format(name))
         self.inactiveLadder.remove(player.position)

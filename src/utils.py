@@ -12,7 +12,7 @@ def setMetadata(metadataToSet):
 
 async def sendToChannel(bot, text: str):
     channel = discord.utils.get(bot.get_all_channels(), name=metadata.textChannel, type=discord.ChannelType.text)
-    await channel.send(text)
+    return await channel.send(text)
 
 def getServer(bot):        
     for guild in bot.guilds:

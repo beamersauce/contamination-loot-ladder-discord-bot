@@ -39,9 +39,11 @@ class LadderDAO:
         return ladder
 
     def getByName(self, name: str):
+        name = name.lower()
         players = self.get()
         for player in players:
-            if utils.testName(name, player.name, player.discordNickName):
+            if name == player.name.lower():
+            # if utils.testName(name, player.name, player.discordNickName):
                 return player
         return None
 

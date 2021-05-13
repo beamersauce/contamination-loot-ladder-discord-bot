@@ -6,11 +6,14 @@ import error_types
 import utils
 from datetime import datetime
 import ladder_svc
+import playername_lookup
+
 
 class LadderInfoCog(commands.Cog, name='Ladder Info'):
     def __init__(self, bot, ladder_service: ladder_svc.LadderService):
         self.bot = bot
         self.ladder_service = ladder_service
+        self.playerlookup = playername_lookup.PlayerNameLookup(ladder_service, bot)
 
     def isDM(ctx):
         if type(ctx.channel) is discord.DMChannel:
@@ -41,8 +44,9 @@ class LadderInfoCog(commands.Cog, name='Ladder Info'):
         if None == name:
             #get current user
             name = ctx.author.display_name
-        print('finding player position for: ' + name)
-        player = self.ladder_service.getPlayer(self.bot, name)
+        playername = self.playerlookup.findPlayerName(name)
+        print('finding player position for: ' + playername)
+        player = self.ladder_service.getPlayerByName(playername)
         print(player)
         await ctx.send("{}'s position on the loot ladder is: {}".format(player.name, player.position))
 
@@ -65,16 +69,13 @@ class LadderInfoCog(commands.Cog, name='Ladder Info'):
         maxPosition = len(self.ladder_service.list())
         if position > maxPosition:
             raise Exception('Request to move to position {} is greater than the end of the list at position {}'.format(position, maxPosition))
-        requestor = self.ladder_service.getPlayer(self.bot, ctx.author.name)
-        player = self.ladder_service.getPlayer(self.bot, name)
-        #TODO change move to take player instead of name
+        requestor = self.playerlookup.findPlayerName(ctx.author.name)
         player = self.ladder_service.move(name, position)
         movedName = player.name
         try:
             movedName = utils.getDiscordMention(self.bot, player).mention
         except Exception as err:
             print(err)
-            # pass
         await utils.sendToChannel(self.bot, '{} moved {} to ladder position {}'.format(ctx.author.mention, movedName, player.position))        
 
     @commands.command(name='record', pass_context=True, brief='record raid participation', description='records everyone in a voice channel as being a raider this day')
@@ -82,7 +83,7 @@ class LadderInfoCog(commands.Cog, name='Ladder Info'):
     async def record(self, ctx, name: typing.Optional[str], date: typing.Optional[str]):
         if None == date:
             date = utils.getTodaysDate()
-        requestor = self.ladder_service.getPlayer(self.bot, ctx.author.name, False)
+        requestor = self.ladder_service.getPlayerByName(ctx.author.name, False)
         msg = requestor.name + " recorded Raid attendance on " + date + " for:\n"
         namesToRecord = []
         if None == name:            

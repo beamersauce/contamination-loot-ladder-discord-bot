@@ -8,6 +8,7 @@ import cogs.auction
 import cogs.ladder
 import utils
 import spreadsheetmetadata
+import playername_lookup
 
 # METADATA - burch server
 google_spreadsheet_id = '1bw7PFkwSm4b9T57217PtKqk34zC43ZXKlZQrfDEYRvE'
@@ -42,7 +43,7 @@ utils.setMetadata(metadata)
 activeLadder = ladder_dao.LadderDAO(google_spreadsheet_id, google_ladder_sheet_id, 'Loot Ladder', metadata, 'active')
 inactiveLadder = ladder_dao.LadderDAO(google_spreadsheet_id, google_upcoming_sheet_id, 'Upcoming Ladder', metadata, 'inactive')
 # metadata = ladder_dao.LadderMetadataDAO(google_spreadsheet_id, google_metadata_sheet_id, 'BOT', utils)
-ladder_service = ladder_svc.LadderService(activeLadder, inactiveLadder, metadata)
+ladder_service = ladder_svc.LadderService(activeLadder, inactiveLadder, metadata, bot)
 
 # bot.load_extension("cogs.ladder")
 # bot.load_extension("cogs.auction")
